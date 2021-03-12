@@ -12,7 +12,7 @@ export function addCssModulesCamelCase() {
 
       rule.oneOf.forEach((rule) => {
         if (
-          rule.test.toString().indexOf('module') < 0 ||
+          rule.test?.toString().indexOf('module') < 0 ||
           !Array.isArray(rule.use)
         ) {
           return;
