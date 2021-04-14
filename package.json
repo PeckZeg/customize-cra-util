@@ -15,10 +15,12 @@
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "@types/webpack": "^4.41.26"
+    "@types/webpack": "^4.41.26",
+    "dotenv": "^8.2.0"
   },
   "peerDependencies": {
-    "customize-cra": "^1.0.0"
+    "customize-cra": "^1.0.0",
+    "react-scripts": "^4.0.3"
   },
   "optionalDependencies": {
     "@types/customize-cra": "^1.0.0"

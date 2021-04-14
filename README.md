@@ -60,3 +60,37 @@ module.exports = override(
   </head>
 </html>
 ```
+
+### `resolveModules([additionalModulePaths])`
+
+put app's `node_modules` folder at [`resolve.modules`](https://webpack.js.org/configuration/resolve/#resolvemodules) first place, and inject additional `node_modules` folders.
+
+#### Usage
+
+```javascript
+const { resolveModules } = require('customize-cra-util');
+const { override } = require('customize-cra');
+
+module.exports = override(
+  resolveModules()
+);
+```
+
+### `addDeployEnvironmentVariables()`
+
+inject deploy environment variables to `process.env`.
+
+this util will search `.env.deploy.*` files through `REACT_APP_ENV` env variable.
+
+example: when `REACT_APP_ENV` is `beta`, we will search `.env.deploy.beta.local`, `.env.deploy.beta`, `.env.deploy` files.
+
+#### Usage
+
+```javascript
+const { addDeployEnvironmentVariables } = require('customize-cra-util');
+const { override } = require('customize-cra');
+
+module.exports = override(
+  addDeployEnvironmentVariables()
+);
+```

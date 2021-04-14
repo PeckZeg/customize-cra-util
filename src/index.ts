@@ -1,18 +1,24 @@
 import { Configuration } from 'webpack';
 
+import path from 'path';
+import fs from 'fs';
+
+export { default as addDeployEnvironmentVariables } from './addDeployEnvironmentVariables';
+export { default as addDocumentTitle } from './addDocumentTitle';
+
 /**
  * add camel case variable names for css modules
  */
 export function addCssModulesCamelCase() {
   return (config: Configuration): Configuration => {
-    config.module.rules.forEach((rule) => {
+    config.module?.rules.forEach((rule) => {
       if (!Array.isArray(rule.oneOf)) {
         return;
       }
 
       rule.oneOf.forEach((rule) => {
         if (
-          rule.test?.toString().indexOf('module') < 0 ||
+          (rule.test && rule.test.toString().indexOf('module') < 0) ||
           !Array.isArray(rule.use)
         ) {
           return;
@@ -21,7 +27,8 @@ export function addCssModulesCamelCase() {
         rule.use.forEach((ruleSetUseItem) => {
           if (
             typeof ruleSetUseItem !== 'object' ||
-            ruleSetUseItem.loader?.indexOf('/css-loader/') < 0 ||
+            (ruleSetUseItem.loader &&
+              ruleSetUseItem.loader.indexOf('/css-loader/') < 0) ||
             typeof ruleSetUseItem.options !== 'object'
           ) {
             return;
@@ -39,18 +46,28 @@ export function addCssModulesCamelCase() {
 }
 
 /**
- * add document title
- * @param title document title
+ * resolve `node_modules`
+ * @param additionalModulePaths
  */
-export function addDocumentTitle(title: string) {
+export function resolveModules(additionalModulePaths: string[] = []) {
   return (config: Configuration): Configuration => {
-    const htmlWebpackPlugin = config.plugins?.find(
-      (plugin) => plugin.constructor.name === 'HtmlWebpackPlugin'
-    );
-
-    if (htmlWebpackPlugin) {
-      Object.assign((htmlWebpackPlugin as any).options, { title });
+    if (!config.resolve?.modules) {
+      return config;
     }
+
+    const appNodeModules = path.join(process.cwd(), 'node_modules');
+
+    if (fs.existsSync(appNodeModules)) {
+      const index = config.resolve.modules.indexOf(appNodeModules);
+
+      if (index !== -1) {
+        config.resolve.modules.splice(index, 1);
+      }
+
+      config.resolve.modules.unshift(appNodeModules);
+    }
+
+    config.resolve.modules.push(...additionalModulePaths);
 
     return config;
   };
