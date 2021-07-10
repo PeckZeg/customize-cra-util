@@ -11,9 +11,9 @@ const REACT_APP = /^REACT_APP_/i;
 const REACT_APP_ENV = env.REACT_APP_ENV || 'development';
 
 const dotenvFiles = [
-  `${paths.dotenv}.deploy.${REACT_APP_ENV}.local`,
+  `${paths.dotenv}.deploy`,
   `${paths.dotenv}.deploy.${REACT_APP_ENV}`,
-  `${paths.dotenv}.deploy`
+  `${paths.dotenv}.deploy.${REACT_APP_ENV}.local`
 ];
 
 export default function getClientEnvironment() {
