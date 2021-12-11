@@ -76,7 +76,7 @@ module.exports = override(
 );
 ```
 
-### `addDeployEnvironmentVariables()`
+### `addDeployEnvironmentVariables(extraEnvs: Record<string | number, any>)`
 
 inject deploy environment variables to `process.env`.
 
@@ -89,8 +89,11 @@ example: when `REACT_APP_ENV` is `beta`, we will search `.env.deploy.beta.local`
 ```javascript
 const { addDeployEnvironmentVariables } = require('customize-cra-util');
 const { override } = require('customize-cra');
+const pkgJson = require('./package.json');
 
 module.exports = override(
-  addDeployEnvironmentVariables()
+  addDeployEnvironmentVariables({
+    REACT_APP_PACKAGE: pkgJson.version
+  })
 );
 ```
